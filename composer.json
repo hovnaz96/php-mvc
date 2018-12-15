@@ -1,0 +1,17 @@
+{
+    "require": {
+        "twig/twig": "~2.0",
+        "robmorgan/phinx": "^0.10.6",
+        "rakit/validation": "^1.1",
+        "illuminate/database": "^5.7"
+    },
+    "autoload": {
+        "psr-4": {
+             "Core\\": "Core/",
+             "App\\": "App/"
+        },
+        "classmap": [
+            "App/Models"
+        ]
+    }
+}
