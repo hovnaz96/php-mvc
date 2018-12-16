@@ -5,6 +5,8 @@ namespace App\Controllers;
 use App\Models\User;
 use App\Rules\UniqueRule;
 use \Core\View;
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\ServiceAccount;
 use Rakit\Validation\Validator;
 
 
@@ -60,7 +62,8 @@ class Auth extends \Core\Controller
                 if(password_verify($_POST['password'], $hash)) {
                     $_SESSION['user'] = [
                         'name' => $userByEmail->name,
-                        'id'   => $userByEmail->id
+                        'id'   => $userByEmail->id,
+                        'firebase_id' => $userByEmail->firebase_id
                     ];
 
                     header('Location: /home');
@@ -113,15 +116,33 @@ class Auth extends \Core\Controller
 
             header('Location: /sign-up');
         } else {
-            $user = User::query()->create([
+            $creatingData = [
                 'name' => $_POST['name'],
                 'email' => $_POST['email'],
                 'password' => password_hash($_POST['password'], PASSWORD_BCRYPT)
-            ]);
+            ];
+
+            $serviceAccount = ServiceAccount::fromJsonFile(__DIR__.'\..\\..\\chat-dd165-firebase-adminsdk-9yxd3-303d701c23.json');
+
+            $firebase = (new Factory())
+                ->withServiceAccount($serviceAccount)
+                ->create();
+
+            $uid = uniqid();
+            $additionalClaims = [
+                'name' => $creatingData['name']
+            ];
+
+            $firebase->getAuth()->createCustomToken($uid, $additionalClaims);
+
+            $creatingData['firebase_id'] = $uid;
+
+            $user = User::query()->create($creatingData);
 
             $_SESSION['user'] = [
                 'name' => $user->name,
-                'id'   => $user->id
+                'id'   => $user->id,
+                'firebase_id' => $user->firebase_id
             ];
 
             header('Location: /home');

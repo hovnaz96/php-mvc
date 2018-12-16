@@ -17,7 +17,7 @@ class User extends Eloquent
      */
 
     protected $fillable = [
-        'name', 'email', 'password'
+        'name', 'email', 'password', 'firebase_id'
     ];
 
     /**

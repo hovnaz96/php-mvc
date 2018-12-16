@@ -66,9 +66,13 @@ abstract class Controller
     {
         $requiresAuth = $this->route_params['auth'] ?? false;
         $loggedInUser = $_SESSION['user'] ?? false;
-
-        if($requiresAuth && !$loggedInUser) header('Location: ' . $this->redirectUnauthenticated);
-        else if(!$requiresAuth && $loggedInUser) header('Location: ' . $this->redirectAuthenticated);
+        if($requiresAuth && !$loggedInUser) {
+            header('Location: ' . $this->redirectUnauthenticated);
+            return false;
+        } else if(!$requiresAuth && $loggedInUser) {
+            header('Location: ' . $this->redirectAuthenticated);
+            return false;
+        }
     }
 
     /**

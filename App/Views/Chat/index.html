@@ -1,0 +1,85 @@
+{% block stylesheets %}
+<link href="/css/main.css" type="text/css" rel="stylesheet"/>
+{% endblock %}
+
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+    <div class="messaging">
+        <div class="inbox_msg">
+            <div class="inbox_people">
+                <div class="headind_srch">
+                    <div class="recent_heading">
+                        <h4>Recent</h4>
+                    </div>
+                    <div class="srch_bar">
+
+                    </div>
+                </div>
+                <div class="inbox_chat">
+                    {% for user in users %}
+                    <div class="chat_list" onclick="getMessages('{{ user.firebase_id }}', '{{ user.name }}', this)" data-id="{{ user.firebase_id }}">
+                        <div class="chat_people">
+                            <div class="chat_img"><img src="https://ptetutorials.com/images/user-profile.png"
+                                                       alt="sunil"></div>
+                            <div class="chat_ib">
+                                <h5>{{ user.name }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="mesgs">
+                <div class="msg_history" id="messagesHistory">
+
+                </div>
+                <div class="type_msg">
+                    <div class="input_msg_write">
+                        <form onsubmit="writeUserData(event)">
+                            <input type="text" class="write_msg" placeholder="Type a message" id="message"/>
+                            <button class="msg_send_btn" type="submit">
+                                <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="receiver-template" type="text/x-handlebars-template">
+    <div class="incoming_msg">
+        <div class="incoming_msg_img"><img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"></div>
+        <div class="received_msg">
+            <div class="received_withd_msg">
+                <p> {{ '{{content}}' }}</p>
+                <span class="time_date"> {{ '{{time}}' }}</span></div>
+        </div>
+    </div>
+</script>
+
+<script id="sender-template" type="text/x-handlebars-template">
+    <div class="outgoing_msg">
+        <div class="sent_msg">
+            <p> {{ '{{content}}' }}</p>
+            <span class="time_date"> {{ '{{time}}' }}</span></div>
+    </div>
+</script>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+    window.FIREBASE_UID = '{{ session.user.firebase_id ?? null}}';
+    window.FIREBASE_NAME = '{{ session.user.name ?? null}}';
+</script>
+<script src="/js/firebase.js" type="text/javascript"></script>
+{% endblock %}

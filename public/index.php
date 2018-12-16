@@ -51,5 +51,6 @@ $router->add('register', ['controller' => 'Auth', 'action' => 'registerPost', 'a
 $router->add('logout', ['controller' => 'Auth', 'action' => 'logout', 'auth' => true]);
 
 $router->add('home', ['controller' => 'Home', 'action' => 'welcome', 'auth' => true]);
+$router->add('chat', ['controller' => 'Chat', 'action' => 'index', 'auth' => true]);
     
 $router->dispatch($_SERVER['QUERY_STRING']);
